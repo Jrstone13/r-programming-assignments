@@ -1,0 +1,57 @@
+https://stonej4370.blogspot.com/2025/09/assignment-3-assignment-3-analyzing.html
+
+
+
+
+
+
+# Load libraries
+library(tidyr)
+library(dplyr)
+library(ggplot2)
+
+# Define and inspect data
+Name <- c("Jeb", "Donald", "Ted", "Marco", "Carly", "Hillary", "Bernie")
+ABC_poll <- c(4, 62, 51, 21, 2, 14, 15)
+CBS_poll <- c(12, 75, 43, 19, 1, 21, 19)
+
+df_polls <- data.frame(Name, ABC_poll, CBS_poll)
+
+# Inspect structure and preview
+str(df_polls)
+head(df_polls)
+
+# Summary statistics
+mean_ABC <- mean(df_polls$ABC_poll)
+median_CBS <- median(df_polls$CBS_poll)
+range_both <- range(df_polls[, c("ABC_poll","CBS_poll")])
+
+print(mean_ABC)
+print(median_CBS)
+print(range_both)
+
+# Add difference column (fixed typo)
+df_polls$Diff <- df_polls$CBS_poll - df_polls$ABC_poll
+
+# Tidy data for plotting
+df_long <- df_polls |>
+  pivot_longer(cols = c(ABC_poll, CBS_poll),
+               names_to = "Poll",
+               values_to = "Value")
+
+# Bar chart comparing ABC vs CBS
+p <- ggplot(df_long, aes(x = Name, y = Value, fill = Poll)) +
+  geom_col(position = "dodge") +
+  labs(title = "ABC vs CBS Polls",
+       x = "Candidate",
+       y = "Poll value") +
+  theme_minimal()
+
+# Show chart
+print(p)
+
+# Save chart for blog
+ggsave("polls_bar_chart.png", plot = p, width = 8, height = 5, dpi = 300)
+
+# Optional: differences view
+df_polls[order(-abs(df_polls$Diff)), c("Name", "ABC_poll", "CBS_poll", "Diff")]
