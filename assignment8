@@ -1,0 +1,61 @@
+# Assignment #8: Input/Output, String Manipulation, and the plyr Package
+
+# 1) Select and import the Assignment 6 dataset
+file_path <- file.choose()
+
+# Detect delimiter, then read
+first_line <- readLines(file_path, n = 1)
+if (grepl(",", first_line)) {
+  student6 <- read.csv(file_path, header = TRUE, stringsAsFactors = FALSE)
+} else if (grepl("\t", first_line)) {
+  student6 <- read.table(file_path, header = TRUE, sep = "\t", stringsAsFactors = FALSE, quote = "\"'")
+} else {
+  student6 <- read.table(file_path, header = TRUE, sep = "", stringsAsFactors = FALSE, quote = "\"'")
+}
+
+# 2) Load plyr and compute mean Grade by Sex
+if (!requireNamespace("plyr", quietly = TRUE)) install.packages("plyr")
+library(plyr)
+
+gender_mean <- ddply(
+  student6,
+  "Sex",
+  summarise,
+  GradeAverage = mean(Grade, na.rm = TRUE)
+)
+
+# 3) Write grouped means to a tab-delimited text file
+write.table(
+  gender_mean,
+  file = "gender_mean.txt",
+  sep = "\t",
+  row.names = FALSE
+)
+
+# 4) Filter rows where Name contains i or I
+i_students <- subset(
+  student6,
+  grepl("i", Name, ignore.case = TRUE)
+)
+
+# 5) Write just the names to CSV, no quotes, no row names
+write.csv(
+  i_students$Name,
+  file = "i_students.csv",
+  row.names = FALSE,
+  quote = FALSE
+)
+
+# 6) Export the full filtered data frame to CSV
+write.csv(
+  i_students,
+  file = "i_students_full.csv",
+  row.names = FALSE
+)
+
+# 7) Confirm output files exist and print their paths
+outs <- c("gender_mean.txt", "i_students.csv", "i_students_full.csv")
+paths <- normalizePath(outs, winslash = "/", mustWork = FALSE)
+exists <- file.exists(outs)
+report <- data.frame(file = outs, exists = exists, path = paths, stringsAsFactors = FALSE)
+print(report)
