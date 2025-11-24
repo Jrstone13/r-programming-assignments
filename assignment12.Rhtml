@@ -1,0 +1,50 @@
+<html>
+
+<head>
+<title>My R Markdown Primer</title>
+</head>
+
+<body>
+
+<h1>Introduction</h1>
+
+<p>R Markdown lets you combine text, math notation, and R code in one document. You write your explanation in plain text and insert executable code chunks that run during knitting.</p>
+
+<p>Inline math looks like this: <span>α + β = γ</span></p>
+
+<p>Displayed equation:</p>
+
+<p>
+$$
+y = \alpha + \beta x
+$$
+</p>
+
+<h2>Load a library and dataset</h2>
+
+<!--begin.rcode
+library(ggplot2)
+data("mtcars")
+head(mtcars)
+end.rcode-->
+
+<h2>Summary and plot</h2>
+
+<!--begin.rcode
+summary(mtcars$mpg)
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point() +
+  labs(
+    title = "Car weight vs miles per gallon",
+    x = "Weight 1000 lbs",
+    y = "Miles per gallon"
+  )
+end.rcode-->
+
+<h2>Reflection</h2>
+
+<p>Using R Markdown makes the analysis and the writing stay connected. You do not copy results by hand. You change code and the output updates. You keep everything reproducible.</p>
+
+</body>
+</html>
+
